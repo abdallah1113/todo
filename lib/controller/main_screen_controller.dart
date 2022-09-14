@@ -2,6 +2,7 @@
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo/DB/local/crad.dart';
@@ -137,9 +138,22 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
         (index) => DateTime.utc(first.year, first.month, first.day + index),
   );
 }
+  // add task
+TextEditingController titleTask=TextEditingController();
+    TextEditingController supTask=TextEditingController();
+      TextEditingController newNot=TextEditingController();
 
 
-@override
+
+// add task_target
+  String? newTaskTitle;
+  List<String> op=[' s a','b','c',];
+
+
+
+
+
+  @override
   void onInit() {
   add();
   selectedDay = focusedDay;

@@ -14,13 +14,30 @@ import '../add/add_tasks/add_task.dart';
 import '../add/add_tasks/add_task_target.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
   @override
+  // ignore: library_private_types_in_public_api
   _MainScreen createState() => _MainScreen();
 }
 
 class _MainScreen extends State<MainScreen> {
+MainScreenController mainScreenController =Get.put(MainScreenController());
+@override
+  void initState() {
+  mainScreenController.x();
+  mainScreenController.add();
 
+  mainScreenController.update();
+print('don1');
+    super.initState();
+  }
 
+@override
+  void setState(VoidCallback fn) {
+mainScreenController.tasksDB;
+    super.setState(fn);
+  }
 
   @override
   Widget build(BuildContext context) {

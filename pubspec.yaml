@@ -41,8 +41,8 @@ dependencies:
   table_calendar:
   flutter_device_type: ^0.4.0
   flutter_speed_dial: ^6.0.0
-
-dev_dependencies:
+  animated_splash_screen: ^1.2.0
+  flutter_spinkit:
   flutter_test:
     sdk: flutter
 

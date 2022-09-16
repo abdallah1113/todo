@@ -18,15 +18,24 @@ conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-   reads(String NameDB ,dynamic ad) async {
-    // Get a reference to the database.
-    final db = await   dataBasesLocal.initializeDB();
+  Future reads(String NameDB , ad, ) async {
+
+    final db = await  dataBasesLocal.initializeDB();
 
     final List<Map<String, dynamic>> queryResult = await db.query(NameDB);
 
     return queryResult.map((e) =>  ad(e)).toList();
-  }
 
+  }
+  // Future<List<TasksModel>>  reads(String NameDB , ad, ) async {
+  //
+  //   final db = await  dataBasesLocal.initializeDB();
+  //
+  //   final List<Map<String, dynamic>> queryResult = await db.query(NameDB);
+  //
+  //   return queryResult.map((e) =>  TasksModel.fromMap(e)).toList();
+  //
+  // }
   Future<void> update( String NameDB, DailyTasksModel) async {
     // Get a reference to the database.
     final db = await   dataBasesLocal.initializeDB();

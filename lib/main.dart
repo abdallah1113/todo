@@ -1,4 +1,6 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:todo/pags/ui/fotter_screen.dart';
 import 'package:todo/pags/ui/mainScrin.dart';
@@ -25,7 +27,14 @@ class MyApp extends StatelessWidget {
 
           primarySwatch: Colors.blue,
         ),
-        home: MainScreen(),
+        home: AnimatedSplashScreen(
+          backgroundColor: const Color.fromRGBO(0, 18, 51, 1),
+          nextScreen:  MainScreen(),
+          splash:SpinKitFoldingCube(
+            color:Colors.amber ,
+          ) ,
+        ),
+
 
     );
   }

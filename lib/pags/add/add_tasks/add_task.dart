@@ -67,7 +67,11 @@ class AddTasks extends StatelessWidget {
 
                   ),
                   paddingWidget(),
+TextButton(onPressed: () async {
+ await  controller.addTasksMethod();
 
+  controller.add();
+}, child: Text('child'))
                 ],
               ),
             ),

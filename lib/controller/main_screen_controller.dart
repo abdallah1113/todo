@@ -2,12 +2,12 @@
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo/DB/local/crad.dart';
 
 import '../model/sql_model/Tasks.dart';
+import '../model/sql_model/task_datetime.dart';
 import '../utils.dart';
 
 
@@ -15,18 +15,17 @@ import '../utils.dart';
 class MainScreenController extends GetxController {
   List<TasksModel> y=[TasksModel(0,'','hi','hi2',1999,2,2)];
 
-  Map<DateTime, List<TasksModel>> x = {
-    DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,) : [TasksModel(0,'','hi','hi2',1999,2,2)]
-  } ;
+   Map<DateTime, List<TasksModel>> tasksDB = {
+   } ;
   LinkedHashMap? kEvents ;
-add(){
-  kEvents =LinkedHashMap<DateTime, List<TasksModel>>(
-    equals: isSameDay,
-    hashCode: getHashCode,
-  )..addAll(x);
-  update();
+  int gettHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year;
+  }
+  List<TasksModel>? allTasksInDB;
+  List<TasksModel>?tasksForeOneDays=[];
 
-}
+  List<TaskDatetimeModel>? allTaskDateTimeInDB;
+
 
 CradDB cradDB =CradDB();
  DateTime focusedDay = DateTime.now();
@@ -40,7 +39,8 @@ CalendarFormat calendarFormat = CalendarFormat.month;
 RangeSelectionMode rangeSelectionMode = RangeSelectionMode.toggledOff;
 late final ValueNotifier<List<TasksModel>> selectedEvents;
 
-
+readFromDB(){
+}
 
 List<TasksModel> _getEventsForDay(DateTime day) {
   // Implementation example
@@ -53,42 +53,30 @@ List<TasksModel> _getEventsForDay(DateTime day) {
 
 
 
-List<TasksModel> getEventsForRange(DateTime start, DateTime end) {
-  final days = daysInRange(start, end);
-  update();
+  List<TasksModel> getEventsForRange(DateTime start, DateTime end) {
+    final days = daysInRange(start, end);
+    update();
 
-  return [
+    return [
 
-  for (final d in days) ..._getEventsForDay(d),
+    for (final d in days) ..._getEventsForDay(d),
 
-  ];
+    ];
 
-}
+  }
 
 
-List<TasksModel> getEventsForDay(DateTime day) {
-  // Implementation example
-  return kEvents![day] ?? [];
-}
+  List<TasksModel> getEventsForDay(DateTime day) {
+    // Implementation example
+    return kEvents![day] ?? [];
+  }
 
 
 CradDB db=CradDB();
+DateTime date =DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day);
 
-Future<void> onDaySelected(DateTime _selectedDay, DateTime _focusedDay) async {
-
-  // await db.insert('TaskDatetime',TaskDatetimeModel(1,1,1,1));
-  //   print(await db.reads( 'TaskDatetime',TaskDatetimeModel.fromMap) );
-  // await db.insert('TasksTar',TasksTar(1,'1','1','1'));
-  //  print(await db.reads( 'TasksTar',TasksTar.fromMap) );
-  //
-  // await db.insert('Point',PointModel('1',1,1,1,1,1,1));
-  // print(await db.reads( 'Point',PointModel.fromMap) );
-  //
-  // await db.insert('Users',Users('1','1','1','1','1'));
-  //  print(await db.reads( 'Users',Users.fromMap) );
-
-    print('x=$x');
-    print('x=${x.length}');
+    Future<void> onDaySelected(DateTime _selectedDay, DateTime _focusedDay) async {
+      add();
 
     if (!isSameDay(selectedDay, _selectedDay)) {
      // selectedEvents.value.add(TasksModel(0,'','abdallah','hi2',1999,2,2));
@@ -103,7 +91,9 @@ Future<void> onDaySelected(DateTime _selectedDay, DateTime _focusedDay) async {
 
     }
     update();
-}
+    }
+
+
 void onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
 
 selectedDay = null;
@@ -142,9 +132,96 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
 TextEditingController titleTask=TextEditingController();
     TextEditingController supTask=TextEditingController();
       TextEditingController newNot=TextEditingController();
+  int idDateTime=0;
+  int idTasks=0;
+  Future<int> NewIdDateTime() async{
+
+    List x=  await db.reads('TaskDatetime',TaskDatetimeModel.fromMap) ;
+    x.cast<TaskDatetimeModel>();
+    List<TaskDatetimeModel> y =x.cast<TaskDatetimeModel>();
+    idDateTime  =y.last.id+1;
+    print('id:$y.last.id+1');
+    return idDateTime;
+      }
+  Future<int> NewIdTasks() async{
+
+    List x=  await db.reads( 'Tasks',TasksModel.fromMap) ;
+    x.cast<TasksModel>();
+    List<TasksModel> y =x.cast<TasksModel>();
+    idTasks =y.last.id+1;
+    print('id:$y.last.id+1');
+    return idTasks;
+  }
+      addTasksMethod() async {
+
+    await NewIdDateTime();
+    await NewIdTasks();
+
+        await db.insert('TaskDatetime',TaskDatetimeModel(idDateTime,selectedDay!.year,selectedDay!.month,selectedDay!.day));
+
+        await db.insert('Tasks',TasksModel(idTasks,'',titleTask.text,supTask.text,selectedDay!.year,selectedDay!.month,selectedDay!.day));
+
+        selectedEvents.value.add(TasksModel(idTasks,'',titleTask.text,supTask.text,selectedDay!.year,selectedDay!.month,selectedDay!.day));
+
+        tasksDB[DateTime(selectedDay!.year,selectedDay!.month,selectedDay!.day)] =selectedEvents.value;
+
+        update();
+      }
+
+     Future x()async{
+        List x ;
+        List y ;
+
+        x = await db.reads('Tasks', TasksModel.fromMap);
+        y = await db.reads('TaskDatetime', TaskDatetimeModel.fromMap);
+
+        allTasksInDB =x.cast<TasksModel>();
+        allTaskDateTimeInDB =y.cast<TaskDatetimeModel>();
+
+
+        for (var taskDateTimeInDB in allTaskDateTimeInDB!) {
+
+
+          for (var tasksInDB in allTasksInDB!) {
+
+            if( taskDateTimeInDB.y==tasksInDB.y&&
+                taskDateTimeInDB.d==tasksInDB.d&&
+                taskDateTimeInDB.m==tasksInDB.m){
+
+              print(tasksInDB);
+
+              tasksForeOneDays!.add(tasksInDB);
+
+            }
+            add();
+          }
+
+          tasksDB[DateTime(taskDateTimeInDB.y,taskDateTimeInDB.m,taskDateTimeInDB.d)]=tasksForeOneDays!;
+          print(tasksDB);
+
+          tasksForeOneDays=[];
+          update();
+
+        }
+
+      }
+
+
+        add()   {
 
 
 
+          kEvents =LinkedHashMap<DateTime, List<TasksModel>>(
+            equals: isSameDay,
+            hashCode: gettHashCode,
+          )..addAll(tasksDB);
+          update();
+
+        }
+
+        newId(){
+
+        }
 // add task_target
   String? newTaskTitle;
   List<String> op=[' s a','b','c',];
@@ -154,11 +231,14 @@ TextEditingController titleTask=TextEditingController();
 
 
   @override
-  void onInit() {
-  add();
+  void onInit()async {
+
+    add();
+    x();
   selectedDay = focusedDay;
   selectedEvents = ValueNotifier(_getEventsForDay(selectedDay!));
-
+update();
+print('object');
   super.onInit();
   }
   @override

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_device_type/flutter_device_type.dart';
 import 'package:get/get.dart';
 
+import '../../CustomWidget/custom.dart';
+import '../../controller/achievements_controller.dart';
 import '../../controller/main_screen_controller.dart';
+import '../add/add_tasks/add_achievments.dart';
 
-class TargetMenu extends StatelessWidget {
-  const TargetMenu({Key? key}) : super(key: key);
+class Achievements extends StatelessWidget {
+  AchievementsController achievementsController =Get.put(AchievementsController());
 
   @override
   Widget build(BuildContext context) {
@@ -29,60 +31,63 @@ class TargetMenu extends StatelessWidget {
                   ),
                 ),
               ),
-              TextButton(onPressed:  (){print(Device.get().isTablet) ;}, child: Text('s')),
               SizedBox(
                 child:  GetBuilder<MainScreenController>(
                     init: MainScreenController(),
                   builder: (context) {
-                    return ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
+                    return GetBuilder<AchievementsController>(
+                      init:AchievementsController() ,
+                      builder: (context) {
+                        return ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
 
-                        shrinkWrap: true,
-                        itemCount: 20,
+                            shrinkWrap: true,
+                            itemCount: 20,
 
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            child: Container(
-                              // padding: EdgeInsets.all(5),
-                              // decoration: BoxDecoration(border: Border.all( color: Colors.grey,width: 1)),
-                              margin:
-                                  EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width * 0.22,
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          height: MediaQuery.of(context).size.width *
-                                              0.07,
-                                          child: Image.asset('img/done.png'),
+                            itemBuilder: (context, index) {
+                              return SizedBox(
+                                child: Container(
+
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        width: MediaQuery.of(context).size.width * 0.22,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              height: MediaQuery.of(context).size.width *
+                                                  0.07,
+                                              child: Image.asset('img/done.png'),
+                                            ),
+                                            SizedBox(
+                                                height:
+                                                    MediaQuery.of(context).size.width *
+                                                        0.07,
+                                                child: Image.asset('img/done.png')),
+                                            SizedBox(
+                                                height:
+                                                    MediaQuery.of(context).size.width *
+                                                        0.07,
+                                                child: Image.asset('img/not.png')),
+                                          ],
                                         ),
-                                        SizedBox(
-                                            height:
-                                                MediaQuery.of(context).size.width *
-                                                    0.07,
-                                            child: Image.asset('img/done.png')),
-                                        SizedBox(
-                                            height:
-                                                MediaQuery.of(context).size.width *
-                                                    0.07,
-                                            child: Image.asset('img/not.png')),
-                                      ],
-                                    ),
+                                      ),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.7,
+                                        child: const Text(
+                                            ' اي سيتابنتيساب نتيازد شتيبادز شنتبيد لشنسيتاد ش Adj dfk fungus uuid undef dfس',
+                                            textAlign: TextAlign.right),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.7,
-                                    child: const Text(
-                                        ' اي سيتابنتيساب نتيازد شتيبادز شنتبيد لشنسيتاد ش Adj dfk fungus uuid undef dfس',
-                                        textAlign: TextAlign.right),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        });
+                                ),
+                              );
+                            });
+                      }
+                    );
                   }
                 ),
               )
@@ -90,6 +95,6 @@ class TargetMenu extends StatelessWidget {
           ),
         ),
       ),
-    );
+      );
   }
 }

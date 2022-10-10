@@ -21,8 +21,8 @@ class _BottomNavigationBarExampleState
     final _kTabPages = <Widget>[
       Profile(),
 
-     TargetMenu(),
-      TargetOfMonth(),
+      Achievements(),
+      TargetTasks(),
       MainScreen(),
 
     ];

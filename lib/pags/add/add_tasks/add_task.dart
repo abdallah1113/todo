@@ -27,9 +27,11 @@ class AddTasks extends StatelessWidget {
                   //paddingWidget(),
                   widthWidget(context,
                     TextField(
+                      onChanged: (v){
+                        v==null&&v==''? '':controller.titleTask=v;
+                      },
                       textInputAction: TextInputAction.next, // Moves focus to next.
 
-                      controller: controller.titleTask,
                       autofocus: true,
 
                       showCursor: false,
@@ -47,8 +49,9 @@ class AddTasks extends StatelessWidget {
                   widthWidget(context,
                     TextField(
                         textInputAction: TextInputAction.done,
-                        controller: controller.supTask,
-
+                      onChanged: (v){
+                            controller.supTask=v;
+                      },
                         showCursor: false,
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(hintText: 'ماذا نعمل (اختياري)',),

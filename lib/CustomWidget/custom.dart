@@ -18,3 +18,16 @@ Widget widthWidget( context ,c){
     child: c,
   );
 }
+
+add(Widget x,context) {
+  showModalBottomSheet(
+    isScrollControlled: true,
+    context: context,
+    builder: (context) => SingleChildScrollView(
+      child: Container(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: x),
+    ),
+  );
+}

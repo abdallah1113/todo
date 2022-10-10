@@ -5,7 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo/DB/local/crad.dart';
+import 'package:todo/controller/target_controller.dart';
+import 'package:todo/model/sql_model/note.dart';
+import 'package:todo/model/sql_model/tar_tasks.dart';
 
+import '../DB/local/sqflite.dart';
 import '../model/sql_model/Tasks.dart';
 import '../model/sql_model/task_datetime.dart';
 import '../utils.dart';
@@ -13,7 +17,8 @@ import '../utils.dart';
 
 
 class MainScreenController extends GetxController {
-  List<TasksModel> y=[TasksModel(0,'','hi','hi2',1999,2,2)];
+  DataBasesLocal dataBasesLocal =DataBasesLocal();
+
 
    Map<DateTime, List<TasksModel>> tasksDB = {
    } ;
@@ -39,8 +44,8 @@ CalendarFormat calendarFormat = CalendarFormat.month;
 RangeSelectionMode rangeSelectionMode = RangeSelectionMode.toggledOff;
 late final ValueNotifier<List<TasksModel>> selectedEvents;
 
-readFromDB(){
-}
+
+
 
 List<TasksModel> _getEventsForDay(DateTime day) {
   // Implementation example
@@ -49,7 +54,6 @@ List<TasksModel> _getEventsForDay(DateTime day) {
   return  kEvents![day] ?? [];
 
 }
-
 
 
 
@@ -92,7 +96,28 @@ DateTime date =DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().
     }
     update();
     }
+  changeBoolValue(int i ,bool value) {
+      print(value);
+      print(i);
 
+      TasksModel upDateValue;
+    upDateValue=selectedEvents.value[i];
+    if(value==true){
+      upDateValue=TasksModel(upDateValue.id,upDateValue.idUser,upDateValue.title,upDateValue.subtitle,1,
+        upDateValue.y,upDateValue.m,upDateValue.d);
+      print( upDateValue.isDone);
+    }else{
+      upDateValue=TasksModel(upDateValue.id,upDateValue.idUser,upDateValue.title,upDateValue.subtitle,0,
+          upDateValue.y,upDateValue.m,upDateValue.d);
+      print( upDateValue.isDone);
+
+    }
+    selectedEvents.value[i]=upDateValue;
+      print(upDateValue);
+
+    tasksDB[DateTime(selectedDay!.year,selectedDay!.month,selectedDay!.day)] =selectedEvents.value;
+    update();
+    }
 
 void onRangeSelected(DateTime? start, DateTime? end, DateTime focusedDay) {
 
@@ -129,46 +154,83 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
   );
 }
   // add task
-TextEditingController titleTask=TextEditingController();
-    TextEditingController supTask=TextEditingController();
-      TextEditingController newNot=TextEditingController();
+  String? titleTask;
+  String? supTask;
+  String? newNot;
   int idDateTime=0;
   int idTasks=0;
-  Future<int> NewIdDateTime() async{
+  Future<int> newIdDateTime() async{
 
     List x=  await db.reads('TaskDatetime',TaskDatetimeModel.fromMap) ;
     x.cast<TaskDatetimeModel>();
     List<TaskDatetimeModel> y =x.cast<TaskDatetimeModel>();
-    idDateTime  =y.last.id+1;
-    print('id:$y.last.id+1');
+    print('y:$y');
+    y.isEmpty?idDateTime=1: idDateTime  =y.last.id+1 ;
+
+
     return idDateTime;
       }
-  Future<int> NewIdTasks() async{
+
+  Future<int> newIdTasks() async{
 
     List x=  await db.reads( 'Tasks',TasksModel.fromMap) ;
     x.cast<TasksModel>();
     List<TasksModel> y =x.cast<TasksModel>();
-    idTasks =y.last.id+1;
-    print('id:$y.last.id+1');
+
+    y.isEmpty?idTasks=1: idTasks  =y.last.id+1 ;
+
     return idTasks;
   }
+
+
       addTasksMethod() async {
 
-    await NewIdDateTime();
-    await NewIdTasks();
+    await newIdDateTime();
+
+    await newIdTasks();
+
 
         await db.insert('TaskDatetime',TaskDatetimeModel(idDateTime,selectedDay!.year,selectedDay!.month,selectedDay!.day));
 
-        await db.insert('Tasks',TasksModel(idTasks,'',titleTask.text,supTask.text,selectedDay!.year,selectedDay!.month,selectedDay!.day));
+        await db.insert('Tasks',TasksModel(idTasks,'',titleTask!,supTask == null?'':supTask!,0,selectedDay!.year,selectedDay!.month,selectedDay!.day));
 
-        selectedEvents.value.add(TasksModel(idTasks,'',titleTask.text,supTask.text,selectedDay!.year,selectedDay!.month,selectedDay!.day));
+        selectedEvents.value.add(TasksModel(idTasks,'',titleTask!,supTask == null?'':supTask!,0,selectedDay!.year,selectedDay!.month,selectedDay!.day));
 
         tasksDB[DateTime(selectedDay!.year,selectedDay!.month,selectedDay!.day)] =selectedEvents.value;
 
         update();
       }
+      //Note
 
-     Future x()async{
+      addNoteMethod() async {
+    await db.insert('NoteTask', NoteModel(1,'titleNote!',selectedDay!.year,selectedDay!.month,selectedDay!.day));
+    print(addNewNote());
+      }
+
+  Future<List<NoteModel>>  addNewNote() async {
+    final db = await  dataBasesLocal.initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('NoteTask');
+    return queryResult.map((e) =>  NoteModel.fromMap(e)).toList();
+
+  }
+int idNote=0;
+ String? titleNote;
+newIdNote(){
+  addNewNote().asStream().listen((event) {
+      event.isNotEmpty?
+      idNote = event.last.id:
+      idNote=1;
+    });
+    print(idNote);
+
+    return idNote + 1;
+
+
+}
+
+  //End Note
+
+     Future readTasks()async{
         List x ;
         List y ;
 
@@ -180,8 +242,7 @@ TextEditingController titleTask=TextEditingController();
 
 
         for (var taskDateTimeInDB in allTaskDateTimeInDB!) {
-
-
+          
           for (var tasksInDB in allTasksInDB!) {
 
             if( taskDateTimeInDB.y==tasksInDB.y&&
@@ -219,22 +280,27 @@ TextEditingController titleTask=TextEditingController();
 
         }
 
-        newId(){
 
-        }
 // add task_target
-  String? newTaskTitle;
-  List<String> op=[' s a','b','c',];
+  List<String> op=[];
 
+//task target
+  TargetController targetController=Get.put(TargetController());
+  Future<List<TargetTasksModel>>? taskTarget;
 
-
-
+getTasksTarget() {
+  taskTarget= targetController.readTarget();
+  taskTarget!.then((value) => value.forEach((element) {
+    op.add(element.titleTar);
+  }));
+}
 
   @override
   void onInit()async {
+    getTasksTarget();
 
     add();
-    x();
+    readTasks();
   selectedDay = focusedDay;
   selectedEvents = ValueNotifier(_getEventsForDay(selectedDay!));
 update();

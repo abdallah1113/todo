@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:todo/pags/ui/fotter_screen.dart';
 import 'package:todo/pags/ui/mainScrin.dart';
 import 'package:todo/pags/ui/profile.dart';
-import 'package:todo/pags/ui/target_menu.dart';
 
 
 void main() {
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         home: AnimatedSplashScreen(
           backgroundColor: const Color.fromRGBO(0, 18, 51, 1),
-          nextScreen:  MainScreen(),
+          nextScreen:  BottomNavigationBarExample(),
           splash:SpinKitFoldingCube(
             color:Colors.amber ,
           ) ,

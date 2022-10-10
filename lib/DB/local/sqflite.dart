@@ -9,6 +9,10 @@ Future<Database> initializeDB() async {
     join(path, 'DT_database.db'),
     onCreate: (database, version) async {
       await database.execute(
+        'CREATE TABLE NoteTask(  id INTEGER PRIMARY KEY,  title TEXT  ,  y INTEGER  ,  m INTEGER  ,  d INTEGER    )',
+
+      );
+      await database.execute(
         'CREATE TABLE Users( idUser TEXT,  name TEXT,  img TEXT, email TEXT , pass TEXT)',
 
       );
@@ -17,17 +21,28 @@ Future<Database> initializeDB() async {
 
       );
       await database.execute(
-        'CREATE TABLE Tasks(id INTEGER PRIMARY KEY,  idUser TEXT  ,title TEXT,  subtitle TEXT  ,  y INTEGER  ,m INTEGER,d INTEGER)',
+        'CREATE TABLE Tasks(id INTEGER PRIMARY KEY,  idUser TEXT ,  isDone INTEGER  ,  title TEXT,  subtitle TEXT  ,  y INTEGER  ,m INTEGER,d INTEGER)',
+
+      );
+
+
+      await database.execute(
+        'CREATE TABLE TargetTasks(  id INTEGER PRIMARY KEY , titleTar TEXT, weekNun INTEGER, y INTEGER, m INTEGER)',
 
       );
       await database.execute(
-        'CREATE TABLE TasksTar(  id INTEGER PRIMARY KEY  , idUser TEXT, titleTar TEXT, numTar TEXT)',
+        'CREATE TABLE Achievements(  id INTEGER PRIMARY KEY , title TEXT, point INTEGER, y INTEGER, m INTEGER)',
 
       );
       await database.execute(
-        'CREATE TABLE Point(  idUser TEXT  , tasksPo INTEGER,  workPo INTEGER  ,  personPo INTEGER  ,  studyPo INTEGER  ,  anotherOP INTEGER  ,  notDone INTEGER )',
+        'CREATE TABLE Trophies(  id INTEGER PRIMARY KEY , title TEXT, nun INTEGER, y INTEGER, m INTEGER)',
 
       );
+      await database.execute(
+        'CREATE TABLE Point(  tasksPo INTEGER,  workPo INTEGER  ,  personPo INTEGER  ,  studyPo INTEGER  ,  anotherOP INTEGER  ,  notDone INTEGER )',
+
+      );
+
     },
     version: 2,
   );

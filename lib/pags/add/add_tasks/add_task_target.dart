@@ -37,9 +37,9 @@ class AddTaskTarget extends StatelessWidget {
                           fontSize: 15),
                     ),
 
-                    value: controller.newTaskTitle,
+                    value: controller.titleTask,
                     onChanged: (String? value) {
-                      controller.newTaskTitle = value!;
+                      controller.titleTask = value!;
                       controller.update();
                     },
                     items: controller.op.map((e) {
@@ -49,10 +49,11 @@ class AddTaskTarget extends StatelessWidget {
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width*0.8,
 
-                          child: Center(
-                              child: Text(e,
-                                  textAlign: TextAlign.right)),
-                        ),
+                          child:
+                             Center(
+                                child: Text(e,
+                                    textAlign: TextAlign.right)),
+                          ),
                       );
                     }).toList(),
                   ),
@@ -62,11 +63,12 @@ class AddTaskTarget extends StatelessWidget {
 
                    TextField(
                       textInputAction: TextInputAction.done,
-                      controller: controller.titleTask,
-
                       showCursor: false,
                     textAlign: TextAlign.center,
-                    decoration: InputDecoration(hintText: 'ماذا نعمل (اختياري)',)
+                    decoration: InputDecoration(hintText: 'ماذا نعمل (اختياري)',),
+                     onChanged: (v){
+                       v==null&&v==''? '':controller.supTask=v;
+                     },
                     ),
                   ),
                 ListTile(
@@ -75,7 +77,14 @@ class AddTaskTarget extends StatelessWidget {
                       value: true,
                       onChanged:(v){} ),
                   title:Text('اضافه اشعار '),
-                )
+                ),
+
+                widthWidget(context,
+                  ElevatedButton(
+                    onPressed: (){
+                      controller.addTasksMethod();
+                    },
+                    child: Text('child'),),)
               ],
             ),
           ),

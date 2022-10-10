@@ -23,8 +23,9 @@ class AddNote extends StatelessWidget {
                   widthWidget(context,
                      TextField(
                       textInputAction: TextInputAction.done,
-                      controller: controller.supTask,
-
+                       onChanged: (v){
+                        controller.titleNote=v;
+                       },
                       showCursor: false,
                         textAlign: TextAlign.center,
                       autofocus: true,
@@ -37,7 +38,13 @@ class AddNote extends StatelessWidget {
                         value: true,
                         onChanged:(v){} ),
                     title:Text('اضافه اشعار '),
-                  )
+                  ),
+                  widthWidget(context,
+                    ElevatedButton(
+                      onPressed: (){
+                        controller.addNoteMethod();
+                      },
+                      child: Text('child'),),)
                 ],
               ),
             ),

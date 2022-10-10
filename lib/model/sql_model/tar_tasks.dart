@@ -1,34 +1,38 @@
-class TasksTarModel{
+class TargetTasksModel{
 
   final int id;
-  final String idUser;
 
   final String titleTar;
-  final String numTar;
+  final int  weekNun;
+  final int  y;
+  final int  m;
 
 
-  TasksTarModel( this.id, this.idUser,   this.titleTar,  this.numTar,  );
+  TargetTasksModel( this.id,   this.titleTar,  this.weekNun, this.y,this.m );
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'idUser': idUser,
       'titleTar':titleTar,
-      'numTar':numTar,
+      'weekNun':weekNun,
+      'y':y,
+      'm':m,
+
     };
   }
 
-  TasksTarModel.fromMap(Map<String, dynamic> res)
+  TargetTasksModel.fromMap(Map<String, dynamic> res)
       : id = res["id"],
-        idUser = res["idUser"],
         titleTar=res['titleTar'],
-        numTar=res['numTar'];
+        y=res['y'],
+        m=res['m'],
+        weekNun=res['weekNun'];
 
 
 // Implement toString to make it easier to see information about
 // each dog when using the print statement.
   @override
   String toString() {
-    return 'TasksTar{id: $id, idUser: $idUser,titleTar: $titleTar,numTar: $numTar,}';
+    return 'TargetTasks{id: $id,titleTar: $titleTar,weekNun: $weekNun,y: $y,m: $m,}';
   }
 }

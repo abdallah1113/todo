@@ -38,7 +38,11 @@ class _MainScreen extends State<MainScreen> {
     mainScreenController.tasksDB;
     super.setState(fn);
   }
-
+  Offset _tapPosition=Offset.zero;
+  void _getTapPosition(TapDownDetails details) {
+    final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    final tapPosition = referenceBox.globalToLocal(details.globalPosition);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,6 +138,7 @@ class _MainScreen extends State<MainScreen> {
                           ),
                         ),
                       ),
+                // المهام
                 Container(
                   margin: const EdgeInsets.only(top: 12,right: 12),
                   child: const Text(
@@ -142,22 +147,26 @@ class _MainScreen extends State<MainScreen> {
                     textAlign: TextAlign.left,
                   ),
                 ),
-                SizedBox(
-                  child: ValueListenableBuilder<List<TasksModel>>(
-                          valueListenable: controller.selectedEvents,
-                          builder: (context, value, _) {
-                            return ListView.builder(
-                              padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: value.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 12.0,
-                                    ),
+                // عناصر المهام
+                ValueListenableBuilder<List<TasksModel>>(
+                        valueListenable: controller.selectedEvents,
+                        builder: (context, value, _) {
+                          return ListView.builder(
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: value.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 12.0,
+                                  ),
 
                                     child: ListTile(
+                                      
+
+
+
                                       leading: Checkbox(
                                         value:value[index].isDone==1?
                                         true:
@@ -168,7 +177,7 @@ class _MainScreen extends State<MainScreen> {
                                       ),
                                       trailing: Container(
                                         width: 10,
-                                   color: Colors.deepOrange,
+                                       color: Colors.deepOrange,
                                       ),
                                       minVerticalPadding: 0,
                                       horizontalTitleGap: 8,
@@ -179,21 +188,21 @@ class _MainScreen extends State<MainScreen> {
                                       ),
                                       onTap: () => print('${value[index]}'),
                                       title: Text(
-                                        '${value[index].title}',
+                                        value[index].title,
                                         textAlign: TextAlign.right,
-                                        style: TextStyle(fontSize: 18),
+                                        style: const TextStyle(fontSize: 18),
                                       ),
                                       subtitle:value[index].subtitle!='' ? Text(
                                         value[index].subtitle,
                                         textAlign: TextAlign.right,
                                         style: TextStyle(),
                                       ):null,
-                                    ));
-                              },
-                            );
-                          },
-                        )
-                ),
+                                    ),
+                                  );
+                            },
+                          );
+                        },
+                      ),
               ],
             );
           }
@@ -273,6 +282,4 @@ class _MainScreen extends State<MainScreen> {
   var speedDialDirection = SpeedDialDirection.up;
   var buttonSize = const Size(56.0, 56.0);
   var childrenButtonSize = const Size(56.0, 56.0);
-
-
 }

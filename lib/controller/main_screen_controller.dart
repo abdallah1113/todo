@@ -289,15 +289,18 @@ newIdNote(){
   Future<List<TargetTasksModel>>? taskTarget;
 
 getTasksTarget() {
+  op=[];
   taskTarget= targetController.readTarget();
+  // ignore: avoid_function_literals_in_foreach_calls
   taskTarget!.then((value) => value.forEach((element) {
     op.add(element.titleTar);
+print(op);
+update();
   }));
 }
 
   @override
   void onInit()async {
-    getTasksTarget();
 
     add();
     readTasks();

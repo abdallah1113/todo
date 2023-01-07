@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
@@ -17,69 +16,69 @@ class AddTasks extends StatelessWidget {
           return Directionality(
             textDirection: TextDirection.rtl,
             child: Container(
-              width: MediaQuery.of(context).size.width*0.5,
-
+              width: MediaQuery.of(context).size.width * 0.5,
               child: Column(
                 children: [
-
                   paddingWidget(),
 
                   //paddingWidget(),
-                  widthWidget(context,
+                  widthWidget(
+                    context,
                     TextField(
-                      onChanged: (v){
-                        v==null&&v==''? '':controller.titleTask=v;
+                      onChanged: (v) {
+                        v == null && v == '' ? '' : controller.titleTask = v;
                       },
-                      textInputAction: TextInputAction.next, // Moves focus to next.
+                      textInputAction: TextInputAction.next,
+                      // Moves focus to next.
 
                       autofocus: true,
 
                       showCursor: false,
-                          textAlign: TextAlign.center,
+                      textAlign: TextAlign.center,
 
-                          decoration: InputDecoration(
-                            hintText: 'مهمه الاساسيه',
-
-                          ),
-
+                      decoration: InputDecoration(
+                        hintText: 'مهمه الاساسيه',
                       ),
-                 ),
+                    ),
+                  ),
                   paddingWidget(),
 
-                  widthWidget(context,
+                  widthWidget(
+                    context,
                     TextField(
-                        textInputAction: TextInputAction.done,
-                      onChanged: (v){
-                            controller.supTask=v;
+                      textInputAction: TextInputAction.done,
+                      onChanged: (v) {
+                        controller.supTask = v;
                       },
-                        showCursor: false,
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(hintText: 'ماذا نعمل (اختياري)',),
+                      showCursor: false,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        hintText: 'ماذا نعمل (اختياري)',
+                      ),
                     ),
                   ),
                   paddingWidget(),
 
-                  widthWidget(context,
+                  widthWidget(
+                    context,
                     ListTile(
-                      leading: Icon(Icons.add_alert,color: Colors.teal) ,
-                      trailing: Switch(
-                          value: true,
-                          onChanged:(v){} ),
-                      title:Text('اضافه اشعار '),
+                      leading: Icon(Icons.add_alert, color: Colors.teal),
+                      trailing: Switch(value: true, onChanged: (v) {}),
+                      title: Text('اضافه اشعار '),
                     ),
-
                   ),
                   paddingWidget(),
-TextButton(onPressed: () async {
- await  controller.addTasksMethod();
+                  TextButton(
+                      onPressed: () async {
+                        await controller.addTasksMethod();
 
-  controller.add();
-}, child: Text('child'))
+                        controller.add();
+                      },
+                      child: const Text('child'))
                 ],
               ),
             ),
           );
-        }
-    );
+        });
   }
 }
